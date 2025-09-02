@@ -1163,17 +1163,23 @@ const HomePage = () => {
             const apiUrl = `/api/certificates/lookup/${encodeURIComponent(certificateNumber)}`;
             console.log('Searching certificate at Vercel API:', apiUrl);
             const response = await fetch(apiUrl);
+            console.log('Response status:', response.status);
+            
             const data = await response.json();
+            console.log('Response data:', data);
 
             if (response.ok) {
                 // Transform database response to expected format
                 const transformedData = transformCertificateData(data);
+                console.log('Transformed data:', transformedData);
                 setCertificate(transformedData);
             } else {
+                console.log('Search failed:', data);
                 setError(data.message || 'Certificate not found');
             }
         } catch (err) {
-            setError('Error searching for certificate');
+            console.error('Search error:', err);
+            setError(`Error searching for certificate: ${err.message}`);
         } finally {
             setLoading(false);
         }
