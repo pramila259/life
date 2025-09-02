@@ -69,12 +69,21 @@ const server = http.createServer(async (req, res) => {
           json: (data) => {
             res.writeHead(code, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(data));
+            return res; // Return response object for chaining
           },
           end: (data) => {
             res.writeHead(code);
             res.end(data);
+            return res; // Return response object for chaining
           }
         };
+      };
+      
+      // Add json method directly to response
+      res.json = (data) => {
+        res.writeHead(res.statusCode || 200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(data));
+        return res;
       };
 
       let handler;
