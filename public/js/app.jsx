@@ -1161,8 +1161,18 @@ const HomePage = () => {
 
         try {
             const apiUrl = `/api/lookup?number=${encodeURIComponent(certificateNumber)}`;
+            console.log('Making API request to:', apiUrl);
             const response = await fetch(apiUrl);
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.log('Error response:', errorText);
+                throw new Error(`API request failed: ${response.status} - ${errorText.substring(0, 100)}`);
+            }
+            
             const data = await response.json();
+            console.log('Response data:', data);
 
             if (response.ok) {
                 // Transform database response to expected format
