@@ -86,9 +86,15 @@ export default async function handler(req, res) {
   await initializeDatabase();
 
   try {
+    console.log('=== CERTIFICATE LOOKUP DEBUG ===');
+    console.log('Full req.query:', req.query);
+    console.log('req.url:', req.url);
+    
     const { number } = req.query;
+    console.log('Extracted number from query:', number);
     
     if (!number) {
+      console.log('ERROR: No certificate number provided');
       return res.status(400).json({ 
         error: 'Certificate number is required' 
       });
@@ -96,8 +102,11 @@ export default async function handler(req, res) {
 
     // Decode URL-encoded special characters and perform case-insensitive search
     const decodedNumber = decodeURIComponent(number);
+    console.log('Decoded certificate number:', decodedNumber);
+    console.log('Search query will be: SELECT * FROM certificates WHERE UPPER(certificatenumber) = UPPER($1)');
     
-    const result = await sql`SELECT * FROM certificates WHERE UPPER(certificatenumber) = UPPER(${decodedNumber})`;
+    const result = await sql`SELECT * FROM public.certificates WHERE UPPER(certificatenumber) = UPPER(${decodedNumber})`;
+    console.log('Database result:', result);
 
     if (result.length === 0) {
       return res.status(404).json({ 
