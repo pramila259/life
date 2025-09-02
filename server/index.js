@@ -150,7 +150,14 @@ const server = http.createServer(async (req, res) => {
           res.end('500 - Internal Server Error');
         }
       } else {
-        res.writeHead(200, { 'Content-Type': contentType });
+        const headers = { 'Content-Type': contentType };
+        
+        // Add CSP headers for HTML files to allow JavaScript execution
+        if (extname === '.html') {
+          headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'";
+        }
+        
+        res.writeHead(200, headers);
         res.end(content, 'utf-8');
       }
     });
