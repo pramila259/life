@@ -1160,13 +1160,9 @@ const HomePage = () => {
         setCertificate(null);
 
         try {
-            const apiUrl = `/api/certificates/lookup/${encodeURIComponent(certificateNumber)}`;
-            console.log('Searching certificate at Vercel API:', apiUrl);
+            const apiUrl = `/api/lookup?number=${encodeURIComponent(certificateNumber)}`;
             const response = await fetch(apiUrl);
-            console.log('Response status:', response.status);
-            
             const data = await response.json();
-            console.log('Response data:', data);
 
             if (response.ok) {
                 // Transform database response to expected format
