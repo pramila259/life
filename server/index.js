@@ -43,11 +43,8 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   const cleanUrl = parsedUrl.pathname;
   
-  console.log(`[${req.method}] ${cleanUrl}`);
-  
   // Handle API requests by importing and executing the Vercel functions
   if (cleanUrl.startsWith('/api/')) {
-    console.log('Handling API request:', cleanUrl);
     try {
       // Set CORS headers
       res.setHeader('Access-Control-Allow-Origin', '*');
@@ -108,11 +105,9 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (handler) {
-        console.log('Executing handler for:', cleanUrl);
         await handler(req, res);
         return;
       } else {
-        console.log('No handler found for API route:', cleanUrl);
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'API endpoint not found' }));
         return;
